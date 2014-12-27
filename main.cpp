@@ -2,8 +2,9 @@
 
 int main(){
 	Graph graph;
-	graph.WhoHaveTheMostFriends();
+	graph.TheFriendsNumList(10);
 	graph.WhoHaveTheMostAts();
 	graph.WhoSendMostAts();
+	graph.TheAverageFriends();
 	cout<<"Data Collect succssfully"<<endl;
 }

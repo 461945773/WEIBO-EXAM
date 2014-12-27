@@ -7,12 +7,8 @@ struct Member
 {
 	string value;
 	int key;
-	int friends;
-	int ats;
 	Member(){	
 		key = 0;
-		friends = 0;
-		ats	= 0;
 	}
 };
 class PeopleList{
