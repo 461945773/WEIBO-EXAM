@@ -35,7 +35,7 @@ public:
  		}
 
  		vis = new int[Default_Size];
- 		circle = new set[50];
+ 		circles = new set[50];
  		createNumFriends();
  		createNumAtsIn();
  		createNumAtsOut();
@@ -120,8 +120,25 @@ public:
 		printf("Average of Firs is %d,of AtsOUT is %d,of AtsIn is %d\n",Firs,AtsOUT,AtsIN);
 	}
 
-	void Circle(){
+	void Circles(){
 		BFS(0);
+		setSort(circles);
+		cout<<"\nThe circles is find and sorted \n input num n(1,2,3 ...) to see the nth circle \n or input all to show all circles \n or input quit to quit to main menu.\n"<<endl;
+	}
+
+	showAllCircles(){
+		for(int i = 49;i>=0;i--){
+			if(circles[i].length!=0){
+				ShowNthCirle(i);
+			}
+		}
+	}
+	void ShowNthCirle(int n){
+		cout<<" "<<50-n<<"th : {"<<endl;
+		for(int i = 0; i < circles[n].length; i++){
+			cout<<peoList.list[circles[n].el[i]].value<<" ; ";
+		}
+		cout<<" } \n The total is "<<circles[n].length<<"people.\n"<<endl;
 	}
 
 	void BFS(int v){
@@ -129,7 +146,7 @@ public:
 		int constV = v;
 
 		if(peoList.list[v].value.length() == 0){
-			v++;
+				v++;
 			if(v == Default_Size)
 				return ;
 		}
@@ -153,14 +170,8 @@ public:
 		}
 
 		if(S.length>1){
+			circles[count] = S;
 			count++;
-		cout<<count<<" : {"<<endl;
-		for (int i = 0; i < S.length; ++i){
-			cout<<peoList.list[S.el[i]].value<<" , ";
-		}
-		cout<<"\n } \n    This circle has "<<S.length<<" people . \n"<<endl;
-		total += S.length;
-		cout<<total<<endl;
 		}
 
 		v = constV;
@@ -174,30 +185,64 @@ public:
 		}
 }
 
-struct set{
-	int *el;
-	int length;
-	set(){
-		el = new int[850];
-		length = 0;
-	}
-	void append(int n){
-		if(!exist(n)){
-			el[length] = n;
-			length ++;
+private:
+
+	struct set{
+		int *el;
+		int length;
+		set(){
+			el = new int[850];
+			length = 0;
 		}
-	}
-	bool exist(int n){
-		for (int i = 0; i < length; i++){
-			if (n == el[i]){
-				return true;
+		void append(int n){
+			if(!exist(n)){
+				el[length] = n;
+				length ++;
 			}
 		}
-		return false;
-	}
-};
+		bool exist(int n){
+			for (int i = 0; i < length; i++){
+				if (n == el[i]){
+					return true;
+				}
+			}
+			return false;
+		}
+	};
 
-private:
+
+	void setSort(set *S){
+		qucickSetSort(S,0,50);
+	}	
+
+	void qucickSetSort(set *S,int left,int right){
+		int i = left,j = right;
+		set pivot = S[(right+left)/2];
+		while(i<=j) {
+		    if(S[i].length < pivot.length){
+		    	i++;
+		    }
+		    if(S[j].length > pivot.length){
+				j--;
+			}
+			if(i <= j){
+				set temp;
+				temp.length = S[i].length;
+				temp.el = S[i].el;
+				S[i].length = S[j].length;
+				S[i].el = S[j].el;
+				S[j].length = temp.length;
+				S[j].el= temp.el;
+				i++;
+				j--;
+			}
+		}
+
+		if(i < right)
+			qucickSetSort(S,i,right);
+		if(j > left)
+			qucickSetSort(S,left,j);
+	}
 
 	void createNumFriends(){
 		int temp = 0;
@@ -239,7 +284,7 @@ private:
 		}
 	}
 	int *vis;
-	set *circle;
+	set *circles;
 	int numAtsIn[850];
 	int numAtsOut[850];
 	int numFriends[850];
@@ -248,5 +293,6 @@ private:
 	static const int defaultWeight = 11;
 	static const int Default_Size = 850;
 };
+
 
 #endif
