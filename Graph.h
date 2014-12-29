@@ -13,7 +13,9 @@
 class Graph{
 	
 public:
+
 	Graph(){
+
 		matrix = new int *[Default_Size];
 		for (int i=0; i<Default_Size; i++){
 			matrix[i] = new int[Default_Size];
@@ -26,13 +28,19 @@ public:
 			matrix[peoList.FindIndex(peoList.friCollector.friPairs.pairs[i].str1)][peoList.FindIndex(peoList.friCollector.friPairs.pairs[i].str2)] = 1;
 			matrix[peoList.FindIndex(peoList.friCollector.friPairs.pairs[i].str2)][peoList.FindIndex(peoList.friCollector.friPairs.pairs[i].str1)] = 1;
 		}
-		for (int i=0;i<peoList.atCollector.atPairs.length;i++){
+			for (int i=0;i<peoList.atCollector.atPairs.length;i++){
 			if(matrix[peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str1)][peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str2)]<1)
 				matrix[peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str1)][peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str2)]=0;
-				matrix[peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str1)][peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str2)] += 2;
+				matrix[peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str1)][peoList.FindIndex(peoList.atCollector.atPairs.pairs[i].str2)] += defaultWeight;
  		}
+
+ 		vis = new int[Default_Size];
+ 		circle = new set[50];
  		createNumFriends();
+ 		createNumAtsIn();
+ 		createNumAtsOut();
 	}
+
 	void TheFriendsNumList(int n){
 		KeyToValue sorted[Default_Size];
 		for (int i = 0; i < Default_Size; ++i){
@@ -40,7 +48,7 @@ public:
 			sorted[i].value = numFriends[i];
 		}
 		sort(sorted,Default_Size);
-		cout<<"Here is the FriendsNum List"<<endl;
+		cout<<"Here is the FriendsNum List (The num means how many friends a man/woman have.)"<<endl;
 		cout<<"Show as { Id : Num of friends }"<<endl;
 		cout<<"{"<<endl;
 
@@ -54,65 +62,143 @@ public:
 		out:
 		cout<<"}"<<endl;
 	}
+
+	void TheAtsInNumList(int n){
+		KeyToValue sorted[Default_Size];
+		for (int i = 0; i < Default_Size; ++i){
+			sorted[i].key = i;
+			sorted[i].value = numAtsIn[i];
+		}
+		sort(sorted,Default_Size);
+		cout<<"Here is the AtsIn List (The num means how many @ a man/woman get from others.)"<<endl;
+		cout<<"Show as { Id : Num of friends }"<<endl;
+		cout<<"{"<<endl;
+
+		for (int i = Default_Size-1; i >= 0; --i){
+			if(sorted[i].value > 0){
+				cout<<"		"<<peoList.list[sorted[i].key].value<<" : "<<sorted[i].value<<endl; 
+			n--;
+			if(n==0)goto out;
+		  }
+		}
+		out:
+		cout<<"}"<<endl;
+	}
+
+	void TheAtsOutNumList(int n){
+		KeyToValue sorted[Default_Size];
+		for (int i = 0; i < Default_Size; ++i){
+			sorted[i].key = i;
+			sorted[i].value = numAtsOut[i];
+		}
+		sort(sorted,Default_Size);
+		cout<<"Here is the AtsIn List (The num means how many @ a man/woman send to others .)"<<endl;
+		cout<<"Show as { Id : Num of friends }"<<endl;
+		cout<<"{"<<endl;
+
+		for (int i = Default_Size-1; i >= 0; --i){
+			if(sorted[i].value > 0){
+			cout<<"		"<<peoList.list[sorted[i].key].value<<" : "<<sorted[i].value<<endl; 
+			n--;
+			if(n==0)goto out;
+		  }
+		}
+		out:
+		cout<<"}"<<endl;
+	}
+
 	
-	void WhoHaveTheMostAts(){
-		int max = 0;
-		int temp = 0;
-		int maxi = 0;
-		for (int i = 0;i<Default_Size;i++){
-			temp = 0;
-			for (int j = 0; j < Default_Size; j++)
-			{   
-				if(matrix[j][i]>0){
-						temp += matrix[j][i]/2;
-				}
-			}
-			if(temp>max){
-				max = temp;
-				maxi = i;
-			}
+	void TheAverage(){
+		int AtsIN = 0;
+		int Firs = 0;
+		int AtsOUT = 0;
+		for (int i = 0; i < Default_Size; ++i){
+			AtsIN += numAtsIn[i];
+			AtsOUT += numAtsOut[i];
+			Firs += numFriends[i];
 		}
-		cout<<"The Man/WoMan Who Hava The Most @ is "<<peoList.list[maxi].value<<endl;
-		cout<<"He/She has "<<max<<" @ "<<endl;
+		printf("Average of Firs is %d,of AtsOUT is %d,of AtsIn is %d\n",Firs,AtsOUT,AtsIN);
 	}
 
-	void WhoSendMostAts(){
-		int max = 0;
-		int temp = 0;
-		int maxi = 0;
-		for (int i = 0;i<Default_Size;i++){
-			temp = 0;
-			for (int j = 0; j < Default_Size; j++)
-			{   
-				if(matrix[i][j]>0){
-						temp += matrix[i][j]/2;;
-				}
-			}
-			if(temp>max){
-				max = temp;
-				maxi = i;
-			}
-		}
-		cout<<"The Man/WoMan Who send The Most @ is "<<peoList.list[maxi].value<<endl;
-		cout<<"He/She has sent "<<max<<" @ "<<endl;
+	void Circle(){
+		BFS(0);
 	}
-	void TheAverageAts(){
 
+	void BFS(int v){
+		static int total = 0;
+		int constV = v;
+
+		if(peoList.list[v].value.length() == 0){
+			v++;
+			if(v == Default_Size)
+				return ;
+		}
+		int front,rear;
+		static int count = 0;
+		front = rear = -1;
+		int Q[Default_Size];
+		vis[v] = 1;
+		set S;
+		S.append(v);
+		Q[++rear] = v;
+		while(front!=rear) {
+		    v = Q[++front];
+		    for(int j = 0;j < Default_Size; j++){
+		    	if((matrix[v][j]>2)&&(vis[j]==0)){
+		    		S.append(j);
+		    		vis[j] = 1;
+		    		Q[++rear] = j;
+		    	}
+		    }
+		}
+
+		if(S.length>1){
+			count++;
+		cout<<count<<" : {"<<endl;
+		for (int i = 0; i < S.length; ++i){
+			cout<<peoList.list[S.el[i]].value<<" , ";
+		}
+		cout<<"\n } \n    This circle has "<<S.length<<" people . \n"<<endl;
+		total += S.length;
+		cout<<total<<endl;
+		}
+
+		v = constV;
+		while(1){
+			if(v == Default_Size)
+				break;
+			if(vis[v]==0&&peoList.list[v].value.length()!=0){
+				BFS(v);
+			}
+			else v++;
+		}
+}
+
+struct set{
+	int *el;
+	int length;
+	set(){
+		el = new int[850];
+		length = 0;
 	}
-	void TheAverageFriends(){
-		int iFriends = 0;
-		int iCount = 0;
-		for (int i = 0; i < Default_Size; ++i)
-		{
-			for (int j = 0; j < Default_Size; ++j)
-			{
-				if(matrix[i][j]%2!=0)
-					iFriends++;
+	void append(int n){
+		if(!exist(n)){
+			el[length] = n;
+			length ++;
+		}
+	}
+	bool exist(int n){
+		for (int i = 0; i < length; i++){
+			if (n == el[i]){
+				return true;
 			}
 		}
-		cout<<"The Average of Friends is "<<iFriends/(2*648)<<endl;
+		return false;
 	}
+};
+
 private:
+
 	void createNumFriends(){
 		int temp = 0;
 		for (int i = 0;i<Default_Size;i++){
@@ -120,7 +206,7 @@ private:
 			for (int j = 0; j < Default_Size; j++)
 			{   
 				if(matrix[i][j]>0){
-					if(matrix[i][j]%2!=0){
+					if(matrix[i][j]%defaultWeight!=0){
 						temp ++;
 					}
 				}
@@ -128,11 +214,38 @@ private:
 			numFriends[i] = temp;
 		}
 	}
+
+	void createNumAtsIn(){
+		int temp = 0;
+		for (int i = 0;i<Default_Size;i++){
+			temp = 0;
+			for (int j = 0; j < Default_Size; j++)
+			{  
+				temp += matrix[i][j]/defaultWeight;
+			}
+			numAtsIn[i] = temp;
+		}
+	}
+
+	void createNumAtsOut(){
+		int temp = 0;
+		for (int i = 0;i<Default_Size;i++){
+			temp = 0;
+			for (int j = 0; j < Default_Size; j++)
+			{  
+				temp += matrix[j][i]/defaultWeight;
+			}
+			numAtsOut[i] = temp;
+		}
+	}
+	int *vis;
+	set *circle;
 	int numAtsIn[850];
 	int numAtsOut[850];
 	int numFriends[850];
 	PeopleList peoList;
 	int **matrix;
+	static const int defaultWeight = 11;
 	static const int Default_Size = 850;
 };
 
