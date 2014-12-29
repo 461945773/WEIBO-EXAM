@@ -21,14 +21,14 @@ struct buffefFriend
 		pairs[length].str2 = s2;
 		length++;
 	}
-	bool exist(string s1,string s2){
+	/*bool exist(string s1,string s2){
 		for (int i = 0; i < length; i++){
 			if (pairs[i].str1==s1&&pairs[i].str2==s2){
 				return true;
 			}
 		}
 		return false;
-	}
+	}*/
 	buffefFriend(){
 		pairs = new friendspair[30000];
 	}
