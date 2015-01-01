@@ -126,19 +126,53 @@ public:
 		cout<<"\nThe circles is find and sorted \n input num n(1,2,3 ...) to see the nth circle \n or input all to show all circles \n or input quit to quit to main menu.\n"<<endl;
 	}
 
-	showAllCircles(){
-		for(int i = 49;i>=0;i--){
-			if(circles[i].length!=0){
-				ShowNthCirle(i);
+	void showAllCircles(){
+		for(int i = 1;i <= 50;i++){
+			if(circles[50-i].length!=0){
+				ShowNthCirle(i);	
 			}
 		}
 	}
-	void ShowNthCirle(int n){
-		cout<<" "<<50-n<<"th : {"<<endl;
-		for(int i = 0; i < circles[n].length; i++){
-			cout<<peoList.list[circles[n].el[i]].value<<" ; ";
+
+	void FindMostPopular(){
+		int max = 0;
+		int maxi = 0;
+
+		for(int i = 0;i<Default_Size;i++){
+				int temp = 0;
+				temp += numFriends[i];
+				temp += numAtsIn[i]*defaultWeight;
+				if(temp>max){
+					max = temp;
+					maxi = i;
+				}				
 		}
-		cout<<" } \n The total is "<<circles[n].length<<"people.\n"<<endl;
+		cout<<"The MostPopular is "<<peoList.list[maxi].value<<endl;
+		cout<<"He has "<<numFriends[maxi]<<" friends and "<<numAtsIn[maxi]<<"@"<<endl;;
+	}
+	void FindMostPopularInCircles(int n){
+		ShowNthCirle(n);
+		int max = 0;
+		int maxi = 0;
+		for(int i = 0;i<circles[50-n].length;i++){
+				int temp = 0;
+				temp += numFriends[circles[50-n].el[i]];
+				temp += numAtsIn[circles[50-n].el[i]]*defaultWeight;
+				if(temp>max){
+					max = temp;
+					maxi = i;
+				}				
+		}
+		cout<<"The MostPopular In "<<n<<"th Circles is "<<peoList.list[circles[50-n].el[maxi]].value<<endl;
+		cout<<"He has "<<numFriends[circles[50-n].el[maxi]]<<" friends and "<<numAtsIn[circles[50-n].el[maxi]]<<"@"<<endl;;
+	}
+
+	void ShowNthCirle(int n){
+		cout<<" "<<n<<"th : {"<<endl;
+		for(int i = 0; i < circles[50-n].length; i++){
+			cout<<peoList.list[circles[50-n].el[i]].value<<" ; ";
+		}
+		cout<<" } \n The total is "<<circles[50-n].length<<"people.\n"<<endl;
 	}
 
 	void BFS(int v){
@@ -209,6 +243,7 @@ private:
 			return false;
 		}
 	};
+
 
 
 	void setSort(set *S){
@@ -290,7 +325,7 @@ private:
 	int numFriends[850];
 	PeopleList peoList;
 	int **matrix;
-	static const int defaultWeight = 11;
+	static const int defaultWeight = 22;
 	static const int Default_Size = 850;
 };
 
