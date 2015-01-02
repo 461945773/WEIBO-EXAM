@@ -121,9 +121,10 @@ public:
 	}
 
 	void Circles(){
+		cout<<"The circles is collecting . . ."<<endl;
 		BFS(0);
 		setSort(circles);
-		cout<<"\nThe circles is find and sorted \n input num n(1,2,3 ...) to see the nth circle \n or input all to show all circles \n or input quit to quit to main menu.\n"<<endl;
+		cout<<"The circles is find and sorted"<<endl;
 	}
 
 	void showAllCircles(){

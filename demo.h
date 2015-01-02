@@ -14,8 +14,13 @@
 		Menu,
 		MenuInput,
 		Circle,
-		CircleInput
+		CircleInput,
+		CircleFind,
+		CircleList,
+		Friends,
+		Ats
 	};
+
 class Demo{
 
 private:
@@ -24,22 +29,101 @@ private:
 public:
 	Demo(){
 		state = Menu;
-		char c = '\0';
+		char c;
+		int n;
+		char mybuffer [100];
+		bool cir = 0;
 		while(1) {
 			switch(state){
-				case Menu:cout<<"Input q to quit."<<endl;
+				case Menu:cout<<" Input q to quit,f to enter Friends Menu,\n Input a to enter @ Menu,c to enter Circle Menu."<<endl;
 				state = MenuInput;
 				break;
 				case MenuInput:	
 				switch(c){
 					case 'q':goto out;break;
-					case '\0':break;
-					default:cout<<"syntax input"<<endl;
+					case 'a':state = Ats;break;
+					case 'f':state = Friends;break;
+					case 'c':state = Circle;break;
+					default:break;
 				}
 				break;
-				default : cout<<"State error"<<endl;break;
+				case Ats:cout<<" Input a num n to see the @list of n people,\n Input -1 return to MainMenu."<<endl;
+						while(1) {
+							if(n==-1){
+						    	state = Menu;
+						    	n = 0;
+								break;
+						    }else if(n<=0||n>647){
+
+						    }else{
+						    	graph.TheAtsInNumList(n);
+						    }
+						   cin.getline(mybuffer, 100);
+				         	n = atoi(mybuffer);
+						}
+						break;
+				case Friends:cout<<" Input a num n to see the friends list of n people,\n Input -1 return to MainMenu."<<endl;
+						while(1) {
+							if(n==-1){
+						    	state = Menu;
+						    	n = 0;
+								break;
+					    	}else if(n<=0||n>647){
+						    }else{
+						    	graph.TheFriendsNumList(n);
+						    }
+						   cin.getline(mybuffer, 100);
+				         	n = atoi(mybuffer);
+						}
+						break;
+				case Circle:if(!cir){
+					graph.Circles();
+					cir = true;
+				}
+					cout<<" Input n enter the CircleList Menu \n Input f enter the PopularPeople Menu\n Input q return the MainMenu"<<endl;
+					state = CircleInput;break;
+				case CircleInput:
+				switch(c){
+					case 'n':state = CircleList;break;
+					case 'f':state = CircleFind;break;
+					case 'q':state = Menu;break;
+					default:break;
+				}
+				break;
+				case CircleList:
+				cout<<" Input a num n to see the member list of n Circle,\nInput 99 to see all,\n Input -1 return to MainMenu."<<endl;
+						while(1) {
+							if(n==-1){
+						    	state = Circle;
+						    	n = 0;
+								break;
+					    	}else if(n == 99){
+					    		graph.showAllCircles();
+					    	}else if(n<=0||n>50){
+						    }else{
+						    	graph.ShowNthCirle(n);
+						    }
+						   cin.getline(mybuffer, 100);
+				         	n = atoi(mybuffer);
+						}break;
+				case CircleFind:cout<<" Input a num n to see the most popular people int nTh circle,\n Input 99 to see the Most popular one \n Input -1 return to MainMenu."<<endl;
+						while(1) {
+							if(n==-1){
+						    	state = Circle;
+						    	n = 0;
+								break;
+					    	}else if(n == 99){
+					    		graph.FindMostPopular();
+					    	}else if(n<=0||n>50){
+						    }else{
+						    	graph.FindMostPopularInCircles(n);
+						    }
+						   cin.getline(mybuffer, 100);
+				         	n = atoi(mybuffer);
+						}break;
+				default : cout<<"State error"<<endl;state = Menu;break;
 			}
-			cin>>c;
+			if(state == MenuInput||state == CircleInput)cin>>c;
 		}
 		out:
 		;   

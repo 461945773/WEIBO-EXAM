@@ -78,5 +78,3 @@ public:
 		cout<<"The num of the at action is "<<atPairs.length<<endl;
 	}
 };
-
-
