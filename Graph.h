@@ -41,6 +41,16 @@ public:
  		createNumAtsOut();
 	}
 
+	void Search(string s1,string s2){
+	   int index1 = peoList.FindIndex(s1);
+   	   int index2 = peoList.FindIndex(s2);
+   	   if((index1>=0&&index1<=Default_Size-1)&&(index2>=0&&index2<=Default_Size-1))
+   	   cout<<"The relation score of "<<s1<<" and "<<s2<<" is "<<matrix[index1][index2]<<endl;
+   		else{
+   			cout<<"error ID"<<endl;
+   		}
+	}
+
 	void TheFriendsNumList(int n){
 		KeyToValue sorted[Default_Size];
 		for (int i = 0; i < Default_Size; ++i){

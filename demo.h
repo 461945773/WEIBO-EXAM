@@ -17,6 +17,7 @@
 		CircleInput,
 		CircleFind,
 		CircleList,
+		CircleSearch,
 		Friends,
 		Ats
 	};
@@ -33,6 +34,7 @@ public:
 		int n;
 		char mybuffer [100];
 		bool cir = 0;
+		string s1,s2;
 		while(1) {
 			switch(state){
 				case Menu:cout<<" Input q to quit,f to enter Friends Menu,\n Input a to enter @ Menu,c to enter Circle Menu."<<endl;
@@ -80,18 +82,19 @@ public:
 					graph.Circles();
 					cir = true;
 				}
-					cout<<" Input n enter the CircleList Menu \n Input f enter the PopularPeople Menu\n Input q return the MainMenu"<<endl;
+					cout<<" Input n enter the CircleList Menu \n Input f enter the PopularPeople Menu\n Input s enter the Search Menu\n Input q return the MainMenu"<<endl;
 					state = CircleInput;break;
 				case CircleInput:
 				switch(c){
 					case 'n':state = CircleList;break;
 					case 'f':state = CircleFind;break;
 					case 'q':state = Menu;break;
+					case 's':state = CircleSearch;break;
 					default:break;
 				}
 				break;
 				case CircleList:
-				cout<<" Input a num n to see the member list of n Circle,\nInput 99 to see all,\n Input -1 return to MainMenu."<<endl;
+				cout<<" Input a num n to see the member list of n Circle,\nInput 99 to see all,\n Input -1 return to CircleMenu."<<endl;
 						while(1) {
 							if(n==-1){
 						    	state = Circle;
@@ -106,7 +109,7 @@ public:
 						   cin.getline(mybuffer, 100);
 				         	n = atoi(mybuffer);
 						}break;
-				case CircleFind:cout<<" Input a num n to see the most popular people int nTh circle,\n Input 99 to see the Most popular one \n Input -1 return to MainMenu."<<endl;
+				case CircleFind:cout<<" Input a num n to see the most popular people int nTh circle,\n Input 99 to see the Most popular one \n Input -1 return to CircleMenu."<<endl;
 						while(1) {
 							if(n==-1){
 						    	state = Circle;
@@ -121,6 +124,11 @@ public:
 						   cin.getline(mybuffer, 100);
 				         	n = atoi(mybuffer);
 						}break;
+				case CircleSearch:cout<<" Input two ID to see their relation score"<<endl;
+					cin>>s1>>s2;
+					graph.Search(s1,s2);
+					state = Circle;
+					break;
 				default : cout<<"State error"<<endl;state = Menu;break;
 			}
 			if(state == MenuInput||state == CircleInput)cin>>c;
