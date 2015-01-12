@@ -2,11 +2,15 @@
 #include <string>
 #include <fstream>
 using namespace std;
+
+// At关系的存储结构
 struct atpair
 {
 	string str1;
 	string str2;
 };
+
+// 将AT关系存入内存
 struct bufferAt{
 	atpair *pairs;
 	int length;
@@ -19,6 +23,7 @@ struct bufferAt{
 		length++;
 	}
 };
+// 存储出现过的人的列表
 struct AtDatas
 {
 	string *data;
@@ -30,6 +35,7 @@ struct AtDatas
 		data[length] = s;
 		length ++;
 	}
+	// 排重处理
 	bool exist(string s){
 		for (int i = 0; i < length; i++)
 		{
@@ -40,6 +46,8 @@ struct AtDatas
 		return false;
 	}
 };
+
+// At的成员与关系的收集 缓冲与内存之中
 class AtDataCollector{
 public:
 	AtDatas atDatas;

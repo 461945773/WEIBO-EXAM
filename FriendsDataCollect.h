@@ -6,12 +6,14 @@
 #include <string>
 using namespace std;
 
+// 朋友关系对的结构
 struct  friendspair
 {
 	string str1;
 	string str2;
 };
 
+// 关系对的缓冲存储结构
 struct buffefFriend
 {
 	friendspair *pairs;
@@ -21,18 +23,13 @@ struct buffefFriend
 		pairs[length].str2 = s2;
 		length++;
 	}
-	/*bool exist(string s1,string s2){
-		for (int i = 0; i < length; i++){
-			if (pairs[i].str1==s1&&pairs[i].str2==s2){
-				return true;
-			}
-		}
-		return false;
-	}*/
+	
 	buffefFriend(){
 		pairs = new friendspair[30000];
 	}
 };
+
+// 所涉及成员的列表结构
 struct FriDatas{
 	string *matrix;
 	int length;
@@ -44,6 +41,7 @@ struct FriDatas{
 		length ++;
 		}
 	}
+	// 对重复出现的人进行去重
 	bool exist(string s){
 		for (int i = 0;i<length;i++){
 			if (matrix[i]==s){
@@ -55,6 +53,7 @@ struct FriDatas{
 };
 
 
+// 朋友关系对 与 相关人员的收集与缓存
 class FriendsDataCollector{
 public:
 	FriDatas friData;
@@ -95,10 +94,4 @@ public:
 	}
 };
 
-/*
-int main(){
-		Select("newfriends.txt");
-		system("pause");
-}
-*/
 #endif
